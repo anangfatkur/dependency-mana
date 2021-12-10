@@ -5,6 +5,8 @@ import '../../../controllers/ShopC.dart';
 class ShopItem extends StatelessWidget {
   final shopC = Get.find<ShopController>();
 
+  ShopItem({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(

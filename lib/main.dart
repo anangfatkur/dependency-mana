@@ -1,4 +1,5 @@
 // import 'package:dependency_mana/pages/home/home.dart';
+import 'package:dependency_mana/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       // home: const HomePage(),
       // home: const HomePage(),
       home: const BindingsHomePage(),
+      getPages: AppPages.pages,
     );
   }
 }
