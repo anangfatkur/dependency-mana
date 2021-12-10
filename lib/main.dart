@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // final myC = Get.put(MyController());
   //YOUTUBE Penggunaan lazyput
-  final myC = Get.lazyPut(() => MyController(), tag: 'tag-text', fenix: true);
-  MyApp({Key? key}) : super(key: key);
+  // final myC = Get.lazyPut(() => MyController(), tag: 'tag-text', fenix: true);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +20,27 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  final myC = Get.put(
-    MyController(),
-    permanent: true,
-    tag: 'tag-count',
-  );
+  // final myC = Get.put(
+  //   MyController(),
+  //   permanent: true,
+  //   tag: 'tag-count',
+  // );
 
   // final MyController myC = Get.find();
   // final myC = Get.find<MyController>();
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("HomePage"),
         actions: [
           IconButton(
             onPressed: () => Get.to(() => CountPage),
@@ -47,9 +49,20 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text(
-          "${myC.count}",
-          style: const TextStyle(fontSize: 35),
+        child:
+            // Text(
+            //   "${myC.count}",
+            //   style: const TextStyle(fontSize: 35),
+            // ),
+            Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Home Page"),
+            OutlinedButton(
+              onPressed: () => Get.to(CountPage()),
+              child: const Text("Next >>"),
+            ),
+          ],
         ),
       ),
     );
@@ -58,13 +71,18 @@ class HomePage extends StatelessWidget {
 
 class CountPage extends StatelessWidget {
   // final MyController myC = Get.find();
-  final myC = Get.find<MyController>(tag: 'tag-count');
+  // final myC = Get.find<MyController>(tag: 'tag-count');
+  // final count = 0.obs;
+
+  //MENGGUNAKAN GET PUT BIASA
+  final c = Get.put(MyController());
   CountPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Count Page"),
         actions: [
           IconButton(
             onPressed: () => Get.to(CountPage),
@@ -72,15 +90,46 @@ class CountPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Obx(
-          () => Text(
-            "${myC.count}",
-            style: const TextStyle(fontSize: 35),
+      body:
+          // Center(
+          //   child: Obx(
+          //     () => Text(
+          //       "${myC.count}",
+          //       style: const TextStyle(fontSize: 35),
+          //     ),
+          //   ),
+          // ),
+          Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Obx(
+            () => Text(
+              // "$count",
+              "${c.count}",
+              style: const TextStyle(fontSize: 30),
+            ),
           ),
-        ),
+          OutlinedButton(
+            onPressed: () => Get.to(CountPage()),
+            child: const Text("Next >>"),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () => myC.add()),
+      // floatingActionButton: FloatingActionButton(onPressed: () => myC.add()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => c.setData(),
+
+        //YOUTUBE MENGGUNAKAN PUTASYNC LEBIH CEPAT PENULISAN KODE NYA
+        // Get.putAsync<SharedPreferences>(
+        //   () async {
+        //     final prefs = await SharedPreferences.getInstance();
+        //     await prefs.setInt('counter', 99);
+
+        //     count.value = prefs.getInt('counter')!.toInt();
+        //     return prefs;
+        //   },
+        // ),
+      ),
     );
   }
 }
@@ -120,5 +169,13 @@ class MyController extends GetxController {
 
   var textController = TextEditingController();
 
-  void add() => count++;
+  // void add() => count++;
+
+  //Get biasa menggunakan async
+  Future<void> setData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('counter', 99);
+
+    count.value = prefs.getInt('counter')!.toInt();
+  }
 }
