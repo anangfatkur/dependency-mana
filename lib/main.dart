@@ -17,9 +17,7 @@ class MyApp extends StatelessWidget {
       translations: MyTranslation(),
       locale: const Locale('en'),
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
       home: MyHomePageTranslations(title: 'title'.trArgs(['anang', 'Kopi'])),
       getPages: AppPages.pages,
     );
@@ -144,13 +142,13 @@ class MyHomePageTranslations extends StatefulWidget {
 }
 
 class _MyHomePageTranslations extends State<MyHomePageTranslations> {
-  int _counter = 0;
+  // int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  // void _incrementCounter() {
+  //   setState(() {
+  //     _counter++;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +166,7 @@ class _MyHomePageTranslations extends State<MyHomePageTranslations> {
           IconButton(
             onPressed: () {
               Get.updateLocale(
-                Locale('id'),
+                const Locale('id'),
               );
             },
             icon: const Icon(Icons.alarm),
@@ -182,15 +180,18 @@ class _MyHomePageTranslations extends State<MyHomePageTranslations> {
             Text(
               'body'.tr,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            // Text(
+            //   // '$_counter',
+            //   style: Theme.of(context).textTheme.headline4,
+            // ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          Get.changeTheme(
+              Get.isDarkMode ? ThemeData.light() : ThemeData.dark());
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
