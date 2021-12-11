@@ -1,46 +1,32 @@
-// import 'package:dependency_mana/pages/home/home.dart';
 import 'package:dependency_mana/routes/app_routes.dart';
+import 'package:dependency_mana/utils/translations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import './pages/home.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // final myC = Get.put(MyController());
-  //YOUTUBE Penggunaan lazyput
-  // final myC = Get.lazyPut(() => MyController(), tag: 'tag-text', fenix: true);
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      translations: MyTranslation(),
+      locale: const Locale('en'),
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: const HomePage(),
-      // home: const HomePage(),
-      home: const BindingsHomePage(),
+      home: MyHomePageTranslations(title: 'title'.trArgs(['anang', 'Kopi'])),
       getPages: AppPages.pages,
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  // final myC = Get.put(
-  //   MyController(),
-  //   permanent: true,
-  //   tag: 'tag-count',
-  // );
-
-  // final MyController myC = Get.find();
-  // final myC = Get.find<MyController>();
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -56,12 +42,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child:
-            // Text(
-            //   "${myC.count}",
-            //   style: const TextStyle(fontSize: 35),
-            // ),
-            Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("Home Page"),
@@ -77,11 +58,6 @@ class HomePage extends StatelessWidget {
 }
 
 class CountPage extends StatelessWidget {
-  // final MyController myC = Get.find();
-  // final myC = Get.find<MyController>(tag: 'tag-count');
-  // final count = 0.obs;
-
-  //MENGGUNAKAN GET PUT BIASA
   final c = Get.put(MyController());
   CountPage({Key? key}) : super(key: key);
 
@@ -97,21 +73,11 @@ class CountPage extends StatelessWidget {
           ),
         ],
       ),
-      body:
-          // Center(
-          //   child: Obx(
-          //     () => Text(
-          //       "${myC.count}",
-          //       style: const TextStyle(fontSize: 35),
-          //     ),
-          //   ),
-          // ),
-          Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Obx(
             () => Text(
-              // "$count",
               "${c.count}",
               style: const TextStyle(fontSize: 30),
             ),
@@ -122,31 +88,14 @@ class CountPage extends StatelessWidget {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(onPressed: () => myC.add()),
       floatingActionButton: FloatingActionButton(
         onPressed: () => c.setData(),
-
-        //YOUTUBE MENGGUNAKAN PUTASYNC LEBIH CEPAT PENULISAN KODE NYA
-        // Get.putAsync<SharedPreferences>(
-        //   () async {
-        //     final prefs = await SharedPreferences.getInstance();
-        //     await prefs.setInt('counter', 99);
-
-        //     count.value = prefs.getInt('counter')!.toInt();
-        //     return prefs;
-        //   },
-        // ),
       ),
     );
   }
 }
 
 class TextPage extends StatelessWidget {
-  // final textC = Get.put(
-  //   MyController(),
-  //   permanent: false,
-  //   tag: 'tag-text',
-  // );
   final myC = Get.find<MyController>(tag: 'tag-text');
 
   TextPage({Key? key}) : super(key: key);
@@ -176,13 +125,75 @@ class MyController extends GetxController {
 
   var textController = TextEditingController();
 
-  // void add() => count++;
-
-  //Get biasa menggunakan async
   Future<void> setData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('counter', 99);
 
     count.value = prefs.getInt('counter')!.toInt();
+  }
+}
+
+class MyHomePageTranslations extends StatefulWidget {
+  const MyHomePageTranslations({Key? key, required this.title})
+      : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePageTranslations> createState() => _MyHomePageTranslations();
+}
+
+class _MyHomePageTranslations extends State<MyHomePageTranslations> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'title'.trParams(
+            {
+              'name ': 'Anang',
+              'things': 'Kopi',
+            },
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.updateLocale(
+                Locale('id'),
+              );
+            },
+            icon: const Icon(Icons.alarm),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'body'.tr,
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }

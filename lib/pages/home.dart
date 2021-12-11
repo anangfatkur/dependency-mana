@@ -9,9 +9,14 @@ class BindingsHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      
         title: const Text("Home Page"),
+        actions: [
+          
+        ],
       ),
       body: Center(
+        
         child: ElevatedButton(
           // onPressed: () => Get.to(
           //   () => CountPage(),
